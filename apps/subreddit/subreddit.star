@@ -5,19 +5,30 @@ Description: Display the #1 post of a subreddit.
 Author: Petros Fytilis
 """
 
-load("render.star", "render")
-load("time.star", "time")
-load("http.star", "http")
-load("encoding/base64.star", "base64")
 load("cache.star", "cache")
+load("encoding/base64.star", "base64")
+load("encoding/json.star", "json")
+load("http.star", "http")
+load("render.star", "render")
 load("schema.star", "schema")
+load("time.star", "time")
 
 SCREEN_WIDTH = 64
 STATUS_OK = 200
 MAX_DURATION_SECONDS = 60
 CACHE_TTL_SECONDS = 300
 DEFAULT_SUBREDDIT = "games"
-DEFAULT_TIMEZONE = "America/New_York"
+
+DEFAULT_LOCATION = """
+{
+	"lat": "40.6781784",
+	"lng": "-73.9441579",
+	"description": "Brooklyn, NY, USA",
+	"locality": "Brooklyn",
+	"place_id": "ChIJCSF8lBZEwokRhngABHRcdoI",
+	"timezone": "America/New_York"
+}
+"""
 
 REDDIT_API_URL_TEMPLATE = "https://www.reddit.com/r/{}/hot.json?limit=1"
 
@@ -41,8 +52,9 @@ ABJRU5ErkJggg==
 """)
 
 def main(config):
-    location = config.get("location")
-    timezone = location.timezone if location else DEFAULT_TIMEZONE
+    location = config.get("location", DEFAULT_LOCATION)
+    loc = json.decode(location)
+    timezone = loc["timezone"]
     subreddit = (config.get("subreddit") or DEFAULT_SUBREDDIT).strip()
     is_24h_format = config.bool("is_24h_format", False)
 

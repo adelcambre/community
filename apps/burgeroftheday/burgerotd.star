@@ -7,12 +7,12 @@ Thanks: @whyamihere @dinotash @inxi @J.R. @Milx
 """
 
 load("encoding/base64.star", "base64")
+load("encoding/json.star", "json")
+load("math.star", "math")
+load("random.star", "random")
 load("render.star", "render")
 load("schema.star", "schema")
-load("math.star", "math")
 load("time.star", "time")
-load("random.star", "random")
-load("encoding/json.star", "json")
 
 #64 x 19
 BOBS_LOGO = base64.decode("""
@@ -56,7 +56,7 @@ def main(config):
                 pad = 1,
             )
         else:
-            return
+            return None
 
     LOCATION = config.get("location")
     LOCATION = json.decode(LOCATION) if LOCATION else {}
@@ -188,13 +188,13 @@ def get_schema():
                 id = "location",
                 name = "Location",
                 desc = "So your daily burger changes each day",
-                icon = "place",
+                icon = "locationDot",
             ),
             schema.Toggle(
                 id = "show_logo",
                 name = "Show logo",
                 desc = "Show or hide the Bob's Burgers show logo",
-                icon = "sign-hanging",
+                icon = "signHanging",
                 default = True,
             ),
             schema.Dropdown(
@@ -223,7 +223,7 @@ def get_schema():
                 id = "scroll_speed",
                 name = "Scroll speed",
                 desc = "Text scrolling speed",
-                icon = "person-running",
+                icon = "personRunning",
                 default = scroll_speed[2].value,
                 options = scroll_speed,
             ),
