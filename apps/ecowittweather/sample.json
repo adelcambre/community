@@ -1,0 +1,183 @@
+{
+  "common_list": [
+    {
+      "id": "0x02",
+      "val": "64.8",
+      "unit": "F"
+    },
+    {
+      "id": "0x07",
+      "val": "79%"
+    },
+    {
+      "id": "3",
+      "val": "64.8",
+      "unit": "F"
+    },
+    {
+      "id": "0x05",
+      "val": "68.0",
+      "unit": "F"
+    },
+    {
+      "id": "0x03",
+      "val": "58.1",
+      "unit": "F"
+    },
+    {
+      "id": "0x04",
+      "val": "64.8",
+      "unit": "F"
+    },
+    {
+      "id": "0x0B",
+      "val": "6.71 mph"
+    },
+    {
+      "id": "0x0C",
+      "val": "8.50 mph"
+    },
+    {
+      "id": "0x19",
+      "val": "12.53 mph"
+    },
+    {
+      "id": "0x15",
+      "val": "419.57 W/m2"
+    },
+    {
+      "id": "0x17",
+      "val": "4"
+    },
+    {
+      "id": "0x0A",
+      "val": "155",
+      "battery": "5"
+    }
+  ],
+  "rain": [
+    {
+      "id": "0x0D",
+      "val": "0.72 in"
+    },
+    {
+      "id": "0x0E",
+      "val": "0.00 in/Hr"
+    },
+    {
+      "id": "0x10",
+      "val": "0.06 in"
+    },
+    {
+      "id": "0x11",
+      "val": "0.77 in"
+    },
+    {
+      "id": "0x12",
+      "val": "0.87 in"
+    },
+    {
+      "id": "0x13",
+      "val": "14.59 in",
+      "battery": "0"
+    }
+  ],
+  "wh25": [
+    {
+      "intemp": "73.4",
+      "unit": "F",
+      "inhumi": "54%",
+      "abs": "24.69 inHg",
+      "rel": "24.69 inHg"
+    }
+  ],
+  "lightning": [
+    {
+      "distance": "7.4 mi",
+      "timestamp": "07/06/2023 06:19:15",
+      "count": "4",
+      "battery": "5"
+    }
+  ],
+  "co2": [
+    {
+      "temp": "73.0",
+      "unit": "F",
+      "humidity": "58%",
+      "PM25": "4.0",
+      "PM25_RealAQI": "17",
+      "PM25_24HAQI": "12",
+      "PM10": "4.2",
+      "PM10_RealAQI": "4",
+      "PM10_24HAQI": "3",
+      "CO2": "550",
+      "CO2_24H": "691",
+      "battery": "6"
+    }
+  ],
+  "ch_pm25": [
+    {
+      "channel": "2",
+      "PM25": "10.0",
+      "PM25_RealAQI": "42",
+      "PM25_24HAQI": "109",
+      "battery": "2"
+    }
+  ],
+  "ch_aisle": [
+    {
+      "channel": "1",
+      "name": "Crawlspace",
+      "battery": "0",
+      "temp": "67.3",
+      "unit": "F",
+      "humidity": "65%"
+    },
+    {
+      "channel": "2",
+      "name": "Gear Room",
+      "battery": "0",
+      "temp": "80.1",
+      "unit": "F",
+      "humidity": "45%"
+    },
+    {
+      "channel": "3",
+      "name": "Studio",
+      "battery": "0",
+      "temp": "71.6",
+      "unit": "F",
+      "humidity": "50%"
+    }
+  ],
+  "ch_soil": [
+    {
+      "channel": "1",
+      "name": "Raised Bed Mois",
+      "battery": "0",
+      "humidity": "38%"
+    },
+    {
+      "channel": "2",
+      "name": "Soil moisture",
+      "battery": "0",
+      "humidity": "45%"
+    }
+  ],
+  "ch_temp": [
+    {
+      "channel": "2",
+      "name": "Raised Bed",
+      "temp": "65.5",
+      "unit": "F",
+      "battery": "5"
+    },
+    {
+      "channel": "3",
+      "name": "Soil",
+      "temp": "63.5",
+      "unit": "F",
+      "battery": "5"
+    }
+  ]
+}
