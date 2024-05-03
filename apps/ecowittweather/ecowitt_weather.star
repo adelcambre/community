@@ -94,7 +94,12 @@ UV_INDEX="0x17"
 WIND_DIR="0x0A"
 # "val": "90",
 # "battery": "5"
-
+RAIN_EVENT="0x0D"
+RAIN_RATE="0x0E"
+RAIN_DAY="0x10"
+RAIN_WEEK="0x11"
+RAIN_MONTH="0x12"
+RAIN_YEAR="0x13"
 
 def main(config):
   ip=config.str("ip_address")
@@ -114,32 +119,40 @@ def main(config):
     fail("Ecowitt request failed with status %d", rep.status_code)
 
   json = rep.json()
-  lightning=json["lightning"][0]
-  last_lightning = time.parse_time(x=lightning["timestamp"], format="01/02/2006 15:04:05", location="America/Denver")
-  print("Last lightning timestamp: %s" % last_lightning)
-  print("Now: %s" % time.now())
-  last_lightning_ago = time.now() - last_lightning
-  print("Last lightning: %s" % last_lightning_ago)
-  thirty_minutes = time.parse_duration("30m")
 
-  common = translate_common(json["common_list"])
-  wind_image=wind_direction(int(common[WIND_DIR]))
-  lightning_image=LIGHTNING_IMAGE_2
+  common = translate_common(json)
 
-  temp = int(float(common[TEMP]))
+  wind_dir = common.get(WIND_DIR)
+  wind_image = NONE_IMAGE
+  if wind_dir != None and wind_dir != "---":
+    wind_image=wind_direction(int(wind_dir))
 
-  wind_lightning_row = [
-                        render.Text("%s G%smph" % (wind_speed(common[WIND_SPEED]),
-                          wind_speed(common[WIND_GUST]))),
+
+  temp_str = common.get(TEMP)
+  temp = "-"
+  if temp_str != None and temp_str != "--.-":
+    temp = int(float(temp_str))
+
+  conditions_row = [
+                        render.Text("%s G%s" % (wind_speed(common, WIND_SPEED),
+                          wind_speed(common, WIND_GUST))),
                         render.Image(src=wind_image),
                       ]
 
+  rain = rain_rate(json)
 
-  if last_lightning_ago < thirty_minutes:
-    print("Recent Lightning")
-    wind_lightning_row.append(render.Image(src=lightning_image))
+  if rain != None:
+    print("Raining")
+    conditions_row.append(render.Text(content = "%s" % str(rain),
+                                      color = "#8080ff"))
   else:
-    print("No recent lightning")
+    print("Not raining")
+
+  if check_lightning(json):
+    print("Recent Lightning")
+    conditions_row.append(render.Image(src=LIGHTNING_IMAGE_2))
+  else:
+    print("No Recent Lightning")
 
   return render.Root(
       delay = 500,
@@ -190,7 +203,7 @@ def main(config):
                   render.Row(
                       expanded = True,
                       main_align = "center",
-                      children = wind_lightning_row,
+                      children = conditions_row,
                   ),
               ],
           ),
@@ -231,16 +244,37 @@ def wind_direction(heading):
   print("None")
   return NONE_IMAGE
 
-def translate_common(arr):
+def translate_common(json, key="common_list"):
+  common = json.get(key)
+  if common == None:
+    return {}
+
   out = {}
-  for elem in arr:
+  for elem in common:
     out[elem["id"]] = elem["val"]
 
   return out
 
-def wind_speed(input):
-  speed = input.removesuffix("mph").strip()
+def wind_speed(input, key):
+  speed_str = input.get(key)
+  if speed_str == None or speed_str == "--.-":
+    return "-"
+
+  speed = speed_str.removesuffix("mph").strip()
+
   return int(float(speed))
+
+def rain_rate(input):
+  rain_info = translate_common(input, "rain")
+  rain_str = rain_info.get(RAIN_RATE)
+  if rain_str == None:
+    return None
+
+  rain = rain_str.removesuffix("in/Hr").strip()
+  if rain == "0.00":
+    return None
+
+  return rain
 
 def get_schema():
     return schema.Schema(
@@ -257,6 +291,9 @@ def get_schema():
 
 
 def color_temp(temp):
+  if temp == "-":
+    return "#fff"
+
   t = int(float(temp))
   if t > 100:
     return "#fff"
@@ -272,3 +309,21 @@ def color_temp(temp):
     return "#8080ff"
   elif t <= 20:
     return "#fff"
+
+def check_lightning(json):
+  lightning=json.get("lightning")
+  if lightning == None:
+    return False
+  lightning = lightning[0]
+  ts = lightning.get("timestamp")
+  if ts == None:
+    return False
+  if ts == "--/--/---- --:--:--":
+    return False
+  last_lightning = time.parse_time(x=ts, format="01/02/2006 15:04:05", location="America/Denver")
+  print("Last lightning timestamp: %s" % last_lightning)
+  print("Now: %s" % time.now())
+  last_lightning_ago = time.now() - last_lightning
+  print("Last lightning: %s" % last_lightning_ago)
+  thirty_minutes = time.parse_duration("30m")
+  return last_lightning_ago < thirty_minutes
